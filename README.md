@@ -10,7 +10,7 @@ More on the course, resources and recordings can be found in [csdiy.wiki](https:
 
 ## Why learning Computer Architecture?
 
-I will just put this quote (I don't know where I found it) as the main drive for learning:
+I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main drive for learning:
 > I have one main opinion about programming, which is that deeply understanding the underlying systems you use (the browser, the kernel, the operating system, the network layers, your database, HTTP, whatever you're running on top of) is essential if you want to do technically innovative work and be able to solve hard problems.
 
 ### Labs
