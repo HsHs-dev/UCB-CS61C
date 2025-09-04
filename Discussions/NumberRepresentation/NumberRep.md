@@ -26,17 +26,17 @@
 
 **2.1. If we have an *n*-digit unsigned numeral**
 
-\[
-d_{n-1}d_{n-2}\dots d_{0}
-\]
+$$
+d_{n-1} d_{n-2} \dots d_{0}
+$$
 
-**in radix (or base) \(r\), then the value of that numeral is**  
+**in radix (or base) $r$, then the value of that numeral is**
 
-\[
+$$
 \sum_{i=0}^{n-1} r^i d_i,
-\]
+$$
 
-**which is just fancy notation to say that instead of a 10’s or 100’s place we have an \(r\)’s or \(r^2\)’s place. For the three radices—binary, decimal, and hex—we just let \(r\) be 2, 10, and 16, respectively. Let’s try this by hand. Recall that our preferred tool for writing large numbers is the IEC prefixing system.**
+**which is just fancy notation to say that instead of a 10’s or 100’s place we have an $r$’s or $r^2$’s place. For the three radices—binary, decimal, and hex—we just let $r$ be 2, 10, and 16, respectively. Let’s try this by hand. Recall that our preferred tool for writing large numbers is the IEC prefixing system.**
 
 (a) Convert the following numbers from their initial radix into the other two
 common radices:
