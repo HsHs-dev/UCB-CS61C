@@ -18,6 +18,10 @@ static void allocation_failed() {
     exit(1);
 }
 
+/* Why bad?
+    1. v is redundant, vector_t* retval is enough
+    2. No allocation for the vector itself
+*/
 /* Bad example of how to create a new vector */
 vector_t *bad_vector_new() {
     /* Create the vector and a pointer to it */
@@ -34,6 +38,11 @@ vector_t *bad_vector_new() {
     retval->data[0] = 0;
     return retval;
 }
+
+/* Why bad?
+    1. again, no allocation for the vector
+    2. v.size and v.data are errors, v is a pointer to a the vector struct
+*/
 
 /* Another suboptimal way of creating a vector */
 vector_t also_bad_vector_new() {
