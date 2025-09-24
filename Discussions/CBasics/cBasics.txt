@@ -35,3 +35,49 @@
   (d) replaceptr is not a pointer, it should be char *srcptr, *replaceptr
 
 4.1:
+  (a) static
+  (b) stack
+  (c) static
+  (d) code, static, or stack
+  (e) code
+  (f) heap
+  (g) static or stack
+
+4.2:
+  (a) arr = (int*) malloc(sizeof(int) * k)
+  (b) str = (char*) malloc(sizeof(char) * p) // i forgot the null terminator, so it's p + 1
+  (c) mat = (int*) calloc(n * m, sizeof(int))
+  // alt solution:
+  // mat = (int **) calloc(n, sizeof(int *));
+  // for (int i = 0; i < n; i++)
+  // mat[i] = (int *) calloc(m, sizeof(int));
+
+4.3: buffer overflow can happen with gets, buffer is declared as a char**, and other million problems
+
+4.4:
+  void prepend(struct ll_node** lst, int value) {
+    struct ll_node* new_node = (struct ll_node*) malloc(sizeof(struct ll_node));
+    new_node->first = value;
+    new_node->rest = *lst;
+    *lst = new_node;
+  }
+
+4.5:
+  void free_ll(struct ll_node** lst) {
+    ll_node* current = *lst;
+    ll_node* next;
+    while (current != NULL) {
+      next = current->rest;
+      free(current);
+      current = next;
+    }
+    *lst = NULL
+  }
+  // recursive solution
+  // void free_ll(struct ll_node** lst) {
+  //  if (*lst) {
+  //    free_ll(&((*lst)->rest));
+  //    free(*lst);
+  //  }
+  //  *lst = NULL; // Make writes to **lst fail instead of writing to unusable memory.
+//   }
