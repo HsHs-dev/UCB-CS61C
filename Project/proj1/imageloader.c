@@ -42,30 +42,56 @@ Image *readData(char *filename)
 
 	// initialize the image
 	Image* img = malloc(sizeof (Image));
-	img->rows = width;
-	img->cols = height;
+	img->rows = height;
+	img->cols = width;
 
-	img->image = malloc(width * sizeof(Color*));
+	img->image = malloc(height * sizeof(Color*));
 	for (int i = 0; i < height; i++) {
-		img->image[i] = malloc(height * sizeof(Color));
+		img->image[i] = malloc(width * sizeof(Color));
 	}
 
+	// discard the scale
+	fscanf(fp, "%*s");
 
+	// set the Colors of the image
+	int r, g, b;
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			fscanf(fp, "%d %d %d", &r, &g, &b);
+			img->image[i][j] = (struct Color) {r, g, b};
+		}
+	}
 
-
-	// fclose(fp);
-	// return ... 
-
+	fclose(fp);
+	return img; 
 }
 
 //Given an image, prints to stdout (e.g. with printf) a .ppm P3 file with the image's data.
 void writeData(Image *image)
 {
-	//YOUR CODE HERE
+	printf("P3\n%d %d\n%d\n", image->cols, image->rows, 255);
+
+	for (int i = 0; i < image->rows; i++) {
+    for (int j = 0; j < image->cols; j++) {
+      printf("%3d ", image->image[i][j].R);
+      printf("%3d ", image->image[i][j].G);
+      printf("%3d", image->image[i][j].B);
+			if (j != image->cols - 1) {
+				printf("   ");
+			}
+    }
+
+    putchar('\n');
+  }
 }
 
 //Frees an image
 void freeImage(Image *image)
 {
-	//YOUR CODE HERE
+	for (int i = 0; i < image->rows; i++) {
+		free(image->image[i]);
+	}
+	
+	free(image->image);
+	free(image);
 }
