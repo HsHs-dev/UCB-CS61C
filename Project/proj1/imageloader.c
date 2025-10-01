@@ -7,7 +7,7 @@
 ** AUTHOR:      Dan Garcia  -  University of California at Berkeley
 **              Copyright (C) Dan Garcia, 2020. All rights reserved.
 **              Justin Yokota - Starter Code
-**				YOUR NAME HERE
+**				Hassan Siddig Mahmoud
 **
 **
 ** DATE:        2020-08-15
@@ -41,7 +41,7 @@ Image *readData(char *filename)
 	fscanf(fp, "%d %d", &width, &height);
 
 	// initialize the image
-	Image* img = malloc(sizeof (Image));
+	Image* img = malloc(sizeof(Image));
 	img->rows = height;
 	img->cols = width;
 

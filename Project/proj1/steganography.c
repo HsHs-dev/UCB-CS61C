@@ -7,7 +7,7 @@
 ** AUTHOR:      Dan Garcia  -  University of California at Berkeley
 **              Copyright (C) Dan Garcia, 2020. All rights reserved.
 **				Justin Yokota - Starter Code
-**				YOUR NAME HERE
+**				Hassan Siddig Mahmoud
 **
 ** DATE:        2020-08-23
 **
@@ -21,13 +21,68 @@
 //Determines what color the cell at the given row/col should be. This should not affect Image, and should allocate space for a new Color.
 Color *evaluateOnePixel(Image *image, int row, int col)
 {
-	//YOUR CODE HERE
+	int blue_channel = image->image[row][col].B;
+	int lsb_val = blue_channel & 1;
+
+	int white = 255;
+	int black = 0;
+
+	Color* color = malloc(sizeof(Color));
+
+	if (color == NULL) {
+		printf("Memory allocation failed\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (lsb_val) {
+		color->R = white;
+		color->B = white;
+		color->G = white;
+	} else {
+		color->R = black;
+		color->G = black;
+		color->B = black;
+	}
+
+	return color;
 }
 
 //Given an image, creates a new image extracting the LSB of the B channel.
 Image *steganography(Image *image)
 {
-	//YOUR CODE HERE
+	Image* new_image = malloc(sizeof(Image));
+
+	if (new_image == NULL) {
+		printf("Memory allocation failed\n");
+		exit(EXIT_FAILURE);
+	}
+
+	int rows = image->rows;
+	int cols = image->cols;
+
+	new_image->rows = rows;
+	new_image->cols = cols;
+	new_image->image = malloc(rows * sizeof(Color*));
+
+	if (new_image->image == NULL) {
+		printf("Memory allocation failed\n");
+		free(new_image);
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < rows; i++) {
+		new_image->image[i] = malloc(cols * sizeof(Color));
+	}
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			Color* color_ptr = evaluateOnePixel(image, i, j);
+			new_image->image[i][j] = *color_ptr;
+			free(color_ptr);
+		}
+	}
+
+	return new_image;
 }
 
 /*
@@ -45,5 +100,12 @@ Make sure to free all memory before returning!
 */
 int main(int argc, char **argv)
 {
-	//YOUR CODE HERE
+
+	Image* image = readData(argv[1]);
+	Image* new_image = steganography(image);
+	writeData(new_image);
+	freeImage(image);
+	freeImage(new_image);
+	
+	return 0;
 }
