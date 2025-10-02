@@ -54,18 +54,93 @@ Color *evaluateOneCell(Image *image, int row, int col, uint32_t rule)
 	// int next = (rule >> index) & 1;
 	int *rule_arr = get_rules(rule);
 
+	int rows = image->rows;
+	int cols = image->cols;
+	printf("rows: %d, cols: %d\n", rows, cols);
 
+	// evaluate the neighbours
+	int alive = 0;
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
 
-	// free(rule_arr);
+			// skip the cell itself
+			if (i == 0 && j == 0) {
+				continue;
+			}
 
+			int new_row = floor_mod(row + i, rows);
+			int new_col = floor_mod(col + j, cols);
+			printf("i: %d, j: %d, row: %d, col: %d, new row: %d, new col: %d\n", i, j, row, col, new_row, new_col);
+			Color neighbour = image->image[new_row][new_col];
+			printf("r: %d, g: %d, b: %d\n", neighbour.R, neighbour.G, neighbour.B);
+			alive += neighbour.R || neighbour.G || neighbour.B;
+			printf("alive: %d\n", alive);
+		}
+	}
+	printf("====\n");
 
+	// the state of the cell itself
+	Color color = image->image[row][col];
+	int is_alive = color.R || color.G || color.B;
+
+	// check the rule
+	int rule_number = is_alive ? 0 : 9 + alive;
+	printf("rule number: %d\nrule is %d\n", rule_number, rule_arr[rule_number]);
+	int new_state = rule_arr[(is_alive ? 0 : 9) + alive];
+
+	// the new state
+	int black = 0;
+	int white = 255;
+	Color* new_color = malloc(sizeof(Color));
+
+	if (new_state) {
+		new_color->R = new_color->G = new_color->B = white;
+	} else {
+		new_color->R = new_color->G = new_color->B = black;
+	}
+
+	free(rule_arr);
+
+	return new_color;
 }
 
 //The main body of Life; given an image and a rule, computes one iteration of the Game of Life.
 //You should be able to copy most of this from steganography.c
 Image *life(Image *image, uint32_t rule)
 {
-	//YOUR CODE HERE
+	Image* new_image = malloc(sizeof(Image));
+
+	if (new_image == NULL) {
+		printf("Memory allocation failed\n");
+		exit(EXIT_FAILURE);
+	}
+
+	int rows = image->rows;
+	int cols = image->cols;
+
+	new_image->rows = rows;
+	new_image->cols = cols;
+	new_image->image = malloc(rows * sizeof(Color*));
+
+	if (new_image->image == NULL) {
+		printf("Memory allocation failed\n");
+		free(new_image);
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < rows; i++) {
+		new_image->image[i] = malloc(cols * sizeof(Color));
+	}
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			Color* color_ptr = evaluateOneCell(image, i, j, rule);
+			new_image->image[i][j] = *color_ptr;
+			free(color_ptr);
+		}
+	}
+
+	return new_image;
 }
 
 /*
@@ -85,5 +160,11 @@ You may find it useful to copy the code from steganography.c, to start.
 */
 int main(int argc, char **argv)
 {
-	//YOUR CODE HERE
+
+	Image* image = readData(argv[1]);
+	Image* new_image = life(image, strtol(argv[2], NULL, 16));
+	freeImage(image);
+	writeData(new_image);
+	freeImage(new_image);
+	return 0;
 }

@@ -36,13 +36,9 @@ Color *evaluateOnePixel(Image *image, int row, int col)
 	}
 
 	if (lsb_val) {
-		color->R = white;
-		color->B = white;
-		color->G = white;
+		color->R = color->G = color->B = white;
 	} else {
-		color->R = black;
-		color->G = black;
-		color->B = black;
+		color->R = color->G = color->B = black;
 	}
 
 	return color;
