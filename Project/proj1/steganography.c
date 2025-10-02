@@ -22,6 +22,7 @@
 Color *evaluateOnePixel(Image *image, int row, int col)
 {
 	int blue_channel = image->image[row][col].B;
+	// mask to extract the LSB
 	int lsb_val = blue_channel & 1;
 
 	int white = 255;
