@@ -17,8 +17,10 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 
 - [x] Lab 0 – Intro and Set Up
 - [x] Lab 1 – Number Rep, C and CGDB
-- [ ] Lab 2 – Advanced C
+- [x] Lab 2 – Advanced C
+- [ ] Lab 3 – RISCV Assembly
 
 ### Projects
 
-- [ ] Project 1 – Conway's Game of Life, in RGB!
+- [x] Project 1 – Conway's Game of Life, in RGB!
+- [ ] Project 2 - Artificial Neural Network (ANN) in RISC-V assembly
