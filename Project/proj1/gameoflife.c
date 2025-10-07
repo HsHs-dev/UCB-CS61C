@@ -30,7 +30,7 @@ int* get_rules(int rule) {
 
 	int mask = 1;
 	// fill the top first, because we are extracting right to left
-	for (int i = num_of_rules - 1; i >= 0; i--) {
+	for (int i = 0; i < num_of_rules; i++) {
 		result[i] = rule & mask;
 		rule = rule >> 1;
 	}
@@ -56,7 +56,6 @@ Color *evaluateOneCell(Image *image, int row, int col, uint32_t rule)
 
 	int rows = image->rows;
 	int cols = image->cols;
-	printf("rows: %d, cols: %d\n", rows, cols);
 
 	// evaluate the neighbours
 	int alive = 0;
@@ -70,23 +69,17 @@ Color *evaluateOneCell(Image *image, int row, int col, uint32_t rule)
 
 			int new_row = floor_mod(row + i, rows);
 			int new_col = floor_mod(col + j, cols);
-			printf("i: %d, j: %d, row: %d, col: %d, new row: %d, new col: %d\n", i, j, row, col, new_row, new_col);
 			Color neighbour = image->image[new_row][new_col];
-			printf("r: %d, g: %d, b: %d\n", neighbour.R, neighbour.G, neighbour.B);
 			alive += neighbour.R || neighbour.G || neighbour.B;
-			printf("alive: %d\n", alive);
 		}
 	}
-	printf("====\n");
 
 	// the state of the cell itself
 	Color color = image->image[row][col];
 	int is_alive = color.R || color.G || color.B;
 
 	// check the rule
-	int rule_number = is_alive ? 0 : 9 + alive;
-	printf("rule number: %d\nrule is %d\n", rule_number, rule_arr[rule_number]);
-	int new_state = rule_arr[(is_alive ? 0 : 9) + alive];
+	int new_state = rule_arr[(is_alive ? 9 : 0) + alive];
 
 	// the new state
 	int black = 0;
