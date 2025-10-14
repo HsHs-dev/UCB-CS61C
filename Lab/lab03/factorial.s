@@ -21,4 +21,20 @@ main:
     ecall # Exit
 
 factorial:
-    # YOUR CODE HERE
+    addi t0, x0, 2
+    blt a0, t0, exit # if a0 is less than 2, jump to exit
+    addi s0, x0, a0
+    addi sp, sp, -8
+    sw ra, 0(sp)
+    sw s0, 4(sp)
+    addi a0, a0, -1
+    jal factorial
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    add t2, x0, a0
+    mul a0, a0, t2
+    jr ra
+
+
+exit:
+    jr ra
