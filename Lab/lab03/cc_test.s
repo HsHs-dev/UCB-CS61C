@@ -54,8 +54,9 @@ main:
 #
 # FIXME Fix the reported error in this function (you can delete lines
 # if necessary, as long as the function still returns 1 in a0).
+
+# FIXED: the error was caused by setting a0 to t0 which haven't been set before
 simple_fn:
-    mv a0, t0
     li a0, 1
     ret
 
@@ -74,8 +75,12 @@ simple_fn:
 # FIXME There's a CC error with this function!
 # The big all-caps comments should give you a hint about what's
 # missing. Another hint: what does the "s" in "s0" stand for?
+
+# FIXED: the error was caused because of the overwrite of s0 before saving it to the stack
 naive_pow:
     # BEGIN PROLOGUE
+    addi sp, sp, -4
+    sw s0, 0(sp)
     # END PROLOGUE
     li s0, 1
 naive_pow_loop:
@@ -86,6 +91,8 @@ naive_pow_loop:
 naive_pow_end:
     mv a0, s0
     # BEGIN EPILOGUE
+    lw s0, 0(sp)
+    addi sp, sp, 4
     # END EPILOGUE
     ret
 
@@ -99,9 +106,12 @@ inc_arr:
     # BEGIN PROLOGUE
     #
     # FIXME What other registers need to be saved?
-    #
-    addi sp, sp, -4
+    
+    # FIXED: s0, s1 needed to be saved, so 12 should be subtracted from the stack
+    addi sp, sp, -12
     sw ra, 0(sp)
+    sw s0, 4(sp)
+    sw s1, 8(sp)
     # END PROLOGUE
     mv s0, a0 # Copy start of array to saved register
     mv s1, a1 # Copy length of array to saved register
@@ -115,15 +125,23 @@ inc_arr_loop:
     # FIXME Add code to preserve the value in t0 before we call helper_fn
     # Hint: What does the "t" in "t0" stand for?
     # Also ask yourself this: why don't we need to preserve t1?
-    #
+
+    # ANSWER: because the value in t1 is just copied from t0
+
+    addi sp, sp, -4
+    sw t0, 0(sp)
     jal helper_fn
     # Finished call for helper_fn
+    lw t0, 0(sp)
+    addi sp, sp, 4
     addi t0, t0, 1 # Increment counter
     j inc_arr_loop
 inc_arr_end:
     # BEGIN EPILOGUE
     lw ra, 0(sp)
-    addi sp, sp, 4
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    addi sp, sp, 12
     # END EPILOGUE
     ret
 
@@ -135,13 +153,19 @@ inc_arr_end:
 # be reported by the Venus CC checker (try and figure out why).
 # You should fix the bug anyway by filling in the prologue and epilogue
 # as appropriate.
+
+# FIXED: s0 needed to be saved
 helper_fn:
     # BEGIN PROLOGUE
+    addi sp, sp, -4
+    sw s0, 0(sp)
     # END PROLOGUE
     lw t1, 0(a0)
     addi s0, t1, 1
     sw s0, 0(a0)
     # BEGIN EPILOGUE
+    lw s0, 0(sp)
+    addi sp, sp, 4
     # END EPILOGUE
     ret
 
@@ -175,3 +199,13 @@ failure:
     li a0, 10 # Exit ecall
     ecall
     
+# In RISC-V, we call functions by jumping to them and storing the return address in the ra register. 
+# Does calling convention apply to the jumps to the naive_pow_loop or naive_pow_end labels?
+# No it doesn't, we save the ra register when we think that it will be overwritten, branching doesn't imply to this
+
+# Why do we need to store ra in the prologue for inc_arr, but not in any other function?
+# Because inc_arr uses helper_fn, which will overwrite the ra in order to jump back to inc_arr
+
+# Why wasn’t the calling convention error in helper_fn reported by the CC checker? 
+# (Hint: it’s mentioned above in the exercise instructions.)
+# Because helper_fn wasn't exported as .globl, which makes the function visible to other files
