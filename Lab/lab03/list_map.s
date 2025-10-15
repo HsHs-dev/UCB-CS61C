@@ -68,7 +68,8 @@ map:
 
     # Put the address of the function back into a1 to prepare for the recursion
     # THINK: why a1? What about a0?
-    lw a1, 8(sp)
+    # because a0 has the address of the next node
+    mv a1, s1
 
     # recurse
     jal map
