@@ -66,20 +66,29 @@ map:
     # are modified by the callees, even when we know the content inside the functions 
     # we call. this is to enforce the abstraction barrier of calling convention.
 mapLoop:
-    add t1, s0, x0      # load the address of the array of current node into t1
+    lw t1, 0(s0)        # load the address of the array of current node into t1
     lw t2, 4(s0)        # load the size of the node's array into t2
 
-    add t1, t1, t0      # offset the array address by the count
+    slli t3, t0, 2
+    add t1, t1, t3      # offset the array address by the count
     lw a0, 0(t1)        # load the value at that address into a0
 
+    # save t1 before calling the function
+    addi sp, sp, -4
+    sw t1, 0(sp)
+
     jalr s1             # call the function on that value.
+
+    # restore t1
+    lw t1, 0(sp)
+    addi sp, sp, 4
 
     sw a0, 0(t1)        # store the returned value back into the array
     addi t0, t0, 1      # increment the count
     bne t0, t2, mapLoop # repeat if we haven't reached the array size yet
 
-    la a0, 8(s0)        # load the address of the next node into a0
-    lw a1, 0(s1)        # put the address of the function back into a1 to prepare for the recursion
+    lw a0, 8(s0)        # load the address of the next node into a0
+    mv a1, s1           # put the address of the function back into a1 to prepare for the recursion
 
     jal  map            # recurse
 done:
@@ -174,3 +183,18 @@ malloc:
     li a0, 9
     ecall
     jr ra
+
+# Why do we need to save stuff on the stack before we call jal?
+# Because this is one of the calling conventions in RISC-V Assembly, so important registers don't get overwritten
+
+# What’s the difference between add t0, s0, x0 and lw t0, 0(s0)?
+# lw will derefernce the address in s0 and put the value in t0, while the add will store the address in t0
+
+# Make an ordered list of each of the five mistakes, and the corrections you made to fix them.
+    # 1. line 81: la a0, 8(s0), wrong syntax, la load the address of a label into a register. fix: addi a0, s0, 8
+    # 2. line 69: add t1, s0, x0, we are not actually getting the address of the array, we just copy the address of the node to t1
+        # fix: lw t1, 0(s0)
+    # 3. line 85: sw a0, 0(t1), we should save register t1 before calling the function, in order to not lose our array pointer
+    # 4. line 73: add t1, t1, t0, we should shift t0 to the lift by 2, to multiply it by 4, which is the offset for the next array item
+    # 5. line 90: addi a0, s0, 8, we actually loading the address of the next node pointer into a0, not the address of the next node itself
+        # fix: lw a0, 8(s0)
