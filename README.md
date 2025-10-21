@@ -18,7 +18,8 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 0 – Intro and Set Up
 - [x] Lab 1 – Number Rep, C and CGDB
 - [x] Lab 2 – Advanced C
-- [ ] Lab 3 – RISCV Assembly
+- [x] Lab 3 – RISCV Assembly
+- [ ] Lab 4 - RISCV Functions, Pointers
 
 ### Projects
 
