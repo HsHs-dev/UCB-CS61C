@@ -19,7 +19,8 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 1 – Number Rep, C and CGDB
 - [x] Lab 2 – Advanced C
 - [x] Lab 3 – RISCV Assembly
-- [ ] Lab 4 - RISCV Functions, Pointers
+- [x] Lab 4 - RISCV Functions, Pointers
+- [ ] Lab 5 - Logisim
 
 ### Projects
 

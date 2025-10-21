@@ -76,7 +76,11 @@ main:
 # a1 is the address of the "output" array (defined above).
 # Think: why might having a1 be useful?
 f:
-    # YOUR CODE GOES HERE!
+    # add the value at a0 to an offset of 3, it will give us the offset of the output array
+    addi t0, a0, 3
+    slli t1, t0, 2      # shift left logical to get the offset in bytes
+    add t2, a1, t1      # put the address of the array element in t2
+    lw a0, 0(t2)        # load the content of address t2 to a0
 
     jr ra               # Always remember to jr ra after your function!
 
