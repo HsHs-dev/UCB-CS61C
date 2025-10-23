@@ -14,6 +14,14 @@ class TestAbs(TestCase):
         # generate the `assembly/TestAbs_test_zero.s` file and run it through venus
         t.execute()
 
+    def test_minus_one(self):
+        t = AssemblyTest(self, "abs.s")
+        t.input_scalar("a0", -1)
+        t.call("abs")
+        t.check_scalar("a0", 1)
+        t.execute()
+
+
     def test_one(self):
         # same as test_zero, but with input 1
         t = AssemblyTest(self, "abs.s")
