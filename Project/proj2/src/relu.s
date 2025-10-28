@@ -13,26 +13,28 @@
 #   this function terminates the program with error code 78.
 # ==============================================================================
 relu:
-    # Prologue
 
+    # if the length is less than 1, jump to error
+    li t0, 1
+    blt a1, t0, error 
 
+    li t0, 0 
 loop_start:
-    
-
-
-
-
-
-
-
+    beq t0, a1, loop_end
+    slli t1, t0, 2
+    add t2, a0, t1
+    lw t3, 0(t2)
+    bgt t3, x0, loop_continue # if t0 <= t1 then target
+    sw x0, 0(t2)
 loop_continue:
-
-
+    addi t0, t0, 1
+    j loop_start
 
 loop_end:
-
-
-    # Epilogue
-
-    
 	ret
+
+error:
+    # exit the program with error code 78
+    li a0, 78
+    li a7, 10
+    ecall
