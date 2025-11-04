@@ -16,19 +16,29 @@
 # =================================================================
 argmax:
 
-    # Prologue
+    # if the length is less than 1, jump to error
+    li t0, 1
+    blt a1, t0, error 
 
-
+    lw t4, 0(a0) # t4 has the first array element as the inital max
+    add t5, x0, t0 # t5 holding the index of max
 loop_start:
-
-
+    beq t0, a1, loop_end
+    slli t1, t0, 2
+    add t2, a0, t1
+    lw t3, 0(t2)
+    ble t3, t4, loop_continue
+    add t4, x0, t3
+    add t5, x0, t0
 loop_continue:
-
-
+    addi t0, t0, 1
+    j loop_start
 loop_end:
-    
-
-    # Epilogue
-
-
+    add a0, x0, t5
     ret
+
+error:
+    # exit the program with error code 78
+    li a0, 77
+    li a7, 10
+    ecall
