@@ -38,7 +38,7 @@ loop_end:
     ret
 
 error:
-    # exit the program with error code 78
+    # exit the program with error code 77
     li a0, 77
     li a7, 10
     ecall
