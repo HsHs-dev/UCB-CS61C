@@ -25,34 +25,41 @@
 # =======================================================
 matmul:
 
-    # Error checks
+    li t0, 1
 
+    # check the dimensions of m0
+    blt a1, t0, m0_error
+    blt a2, t0, m0_error
 
-    # Prologue
+    # check the dimensions of m0
+    blt a4, t0, m1_error
+    blt a5, t0, m1_error
 
+    # if cols a != rows b, jump to comp_error
+    bne a2, a4, comp_error
+
+    # allocate memroy for d
+
+    # save before jumping to malloc
+    addi sp, sp, -12
+    sw s0, 0(sp)
+    sw ra, 4(sp)
+    sw a0, 8(sp)
+    # calculating dimensions of d and allocating memroy for it
+    mul a0, a1, a5
+    jal ra, malloc
+    add s0, x0, a0 # s0 points to the begining of matrix d allocated memory
+    lw ra, 4(sp)
+    lw a0, 8(sp)
+    addi sp, sp, 8
+
+    # TODO: import dot.s, do the multiplication process
 
 outer_loop_start:
 
-
-
-
 inner_loop_start:
 
-
-
-
-
-
-
-
-
-
-
-
 inner_loop_end:
-
-
-
 
 outer_loop_end:
 
@@ -61,3 +68,9 @@ outer_loop_end:
     
     
     ret
+
+malloc:
+    add a1, a0, x0
+    addi a0, x0, 9
+    ecall
+    jr ra
