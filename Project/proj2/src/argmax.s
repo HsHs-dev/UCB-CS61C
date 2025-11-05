@@ -39,6 +39,5 @@ loop_end:
 
 error:
     # exit the program with error code 77
-    li a0, 77
-    li a7, 10
-    ecall
+    li a1, 77
+    jal exit2

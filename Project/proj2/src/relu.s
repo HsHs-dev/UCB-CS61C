@@ -35,6 +35,5 @@ loop_end:
 
 error:
     # exit the program with error code 78
-    li a0, 78
-    li a7, 10
-    ecall
+    li a1, 78
+    jal exit2

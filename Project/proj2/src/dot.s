@@ -55,14 +55,9 @@ loop_end:
     ret
 
 error_length:
-  li a0, 75
-  li a7, 10
-  ecall
-  j end
+  li a1, 75
+  jal exit2
 
 error_stride:
-  li a0, 76
-  li a7, 10
-  ecall
-
-end:
+  li a1, 76
+  jal exit2

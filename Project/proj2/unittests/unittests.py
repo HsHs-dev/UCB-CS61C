@@ -167,7 +167,7 @@ class TestDot(TestCase):
 
 class TestMatmul(TestCase):
 
-    def do_matmul(self, m0, m0_rows, m0_cols, m1, m1_rows, m1_cols, result, code=0):
+    def do_matmul(self, m0, m0_rows, m0_cols, m1, m1_rows, m1_cols, result, code):
         t = AssemblyTest(self, "matmul.s")
         # we need to include (aka import) the dot.s file since it is used by matmul.s
         t.include("dot.s")
@@ -201,7 +201,32 @@ class TestMatmul(TestCase):
         self.do_matmul(
             [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
             [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
-            [30, 36, 42, 66, 81, 96, 102, 126, 150]
+            [30, 36, 42, 66, 81, 96, 102, 126, 150],
+            0
+        )
+
+    def test_m0_err(self):
+        self.do_matmul(
+            [1, 2, 3, 4, 5, 6, 7, 8, 9], 0, 3,
+            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
+            [30, 36, 42, 66, 81, 96, 102, 126, 150],
+            72
+        )
+    
+    def test_m1_err(self):
+        self.do_matmul(
+            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
+            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 0,
+            [30, 36, 42, 66, 81, 96, 102, 126, 150],
+            73
+        )
+    
+    def test_comp_err(self):
+        self.do_matmul(
+            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 4,
+            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
+            [30, 36, 42, 66, 81, 96, 102, 126, 150],
+            74
         )
 
     @classmethod

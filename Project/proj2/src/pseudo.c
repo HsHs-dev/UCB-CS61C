@@ -61,7 +61,7 @@ int* matmul(int a[], int rows_a, int cols_a,
   int* d = malloc(rows_a * cols_b * sizeof(int));
   for (int i = 0; i < rows_a; i++) {
     for (int j = 0; j < cols_b; j++) {
-      d[i * cols_b + j] = dot((a + (i * cols_a)), (b + j), cols_a, 1, cols_b);
+      d[(i * cols_b) + j] = dot((a + (i * cols_a)), (b + j), cols_a, 1, cols_b);
     }
   }
 
