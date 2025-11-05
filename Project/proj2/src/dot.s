@@ -55,7 +55,6 @@ loop_end:
     ret
 
 error_length:
-
   li a0, 75
   li a7, 10
   ecall
@@ -63,7 +62,7 @@ error_length:
 
 error_stride:
   li a0, 76
-  li a7, 93
+  li a7, 10
   ecall
 
 end:

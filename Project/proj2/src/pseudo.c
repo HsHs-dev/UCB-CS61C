@@ -40,6 +40,10 @@ int main(void) {
     putchar('\n');
   }
 
+  free(a);
+  free(b);
+  free(d);
+
   return 0;
 }
 
