@@ -41,16 +41,18 @@ matmul:
     # allocate memroy for d
 
     # save before jumping to malloc
-    addi sp, sp, -12
-    sw s0, 0(sp)
-    sw ra, 4(sp)
-    sw a0, 8(sp)
+    addi sp, sp, -8
+    sw ra, 0(sp)
+    sw a0, 4(sp)
     # calculating dimensions of d and allocating memroy for it
+    # rows * cols * sizeof(element)
     mul a0, a1, a5
+    li t0, 4
+    mul a0, a0, t0
     jal ra, malloc
-    add s0, x0, a0 # s0 points to the begining of matrix d allocated memory
-    lw ra, 4(sp)
-    lw a0, 8(sp)
+    add a6, x0, a0 # a6 points to the begining of matrix d allocated memory
+    lw ra, 0(sp)
+    lw a0, 4(sp)
     addi sp, sp, 8
 
     # TODO: import dot.s, do the multiplication process
