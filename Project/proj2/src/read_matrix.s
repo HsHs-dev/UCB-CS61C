@@ -27,10 +27,12 @@
 read_matrix:
 
     # save the arguments to save registers
-    addi sp, sp, -12
+    addi sp, sp, -20
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
+    sw s3, 12(sp)
+    sw ra, 16(sp)
 
     # s0 = rows pointer, s1 = cols pointer
     mv s0, a1
@@ -56,6 +58,7 @@ read_matrix:
     jal malloc
 
     # check the malloc call failed
+    li t0, 0
     beq a0, t0, malloc_exit
 
     # save the buffer register
@@ -102,7 +105,7 @@ read_matrix:
     addi sp, sp, 4
 
     # check the malloc call failed
-    li t0, -1
+    li t0, 0
     beq a0, t0, malloc_exit
 
     # save the buffer register and the size of the matrix
@@ -124,6 +127,9 @@ read_matrix:
     lw a0, 0(sp)
     addi sp, sp, 8
 
+    # save a0 to s3
+    mv s3, a0
+
     # close the file
     mv a1, s2
     jal fclose
@@ -132,10 +138,15 @@ read_matrix:
     li t0, -1
     beq a0, t0, fclose_exit
 
+    # put the pointer to the matrix in a0
+    mv a0, s3
+
     lw s0, 0(sp)
     lw s1, 4(sp)
     lw s2, 8(sp)
-    addi sp, sp, 12
+    lw s3, 12(sp)
+    lw ra, 16(sp)
+    addi sp, sp, 20
 
     ret
 
