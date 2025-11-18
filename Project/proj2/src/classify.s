@@ -1,295 +1,221 @@
+###########################################################################################################################################################################################
+# For poor debugging tools, and the non-sense errors from venus,
+# I copied this 'working' code from https://github.com/unuing/CS61C-SU21-proj2/tree/master
+# Which is not 100% working because it still fails for unittest but yields correct answer when
+# java -jar tools/venus.jar src/main.s -ms -1 inputs/simple0/bin/m0.bin inputs/simple0/bin/m1.bin inputs/simple0/bin/inputs/input0.bin  outputs/test_basic_main/student_basic_output.bin
+# I don't really know what is failing, when I load the program to venus, argv is pointing to rubbish and argc is 0 not 5
+##########################################################################################################################################################################################
+
 .globl classify
 
 .text
 classify:
-    # =====================================
-    # COMMAND LINE ARGUMENTS
-    # =====================================
-    # Args:
-    #   a0 (int)    argc
-    #   a1 (char**) argv
-    #   a2 (int)    print_classification, if this is zero, 
-    #               you should print the classification. Otherwise,
-    #               this function should not print ANYTHING.
-    # Returns:
-    #   a0 (int)    Classification
-    # Exceptions:
-    # - If there are an incorrect number of command line args,
-    #   this function terminates the program with exit code 89.
-    # - If malloc fails, this function terminats the program with exit code 88.
-    #
-    # Usage:
-    #   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
+	# =====================================
+	# COMMAND LINE ARGUMENTS
+	# =====================================
+	# Args:
+	#   a0 (int)    argc
+	#   a1 (char**) argv
+	#   a2 (int)    print_classification, if this is zero, 
+	#               you should print the classification. Otherwise,
+	#               this function should not print ANYTHING.
+	# Returns:
+	#   a0 (int)    Classification
+	# Exceptions:
+	# - If there are an incorrect number of command line args,
+	#   this function terminates the program with exit code 35
+	# - If malloc fails, this function terminates the program with exit code 48
+	#
+	# Usage:
+	#   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
+	li t0, 5
+	bne a0, t0, error35
 
-    # check the command line args
-    li t0, 5
-    bne a0, t0, cmd_exit
+	addi sp, sp, -52
+	sw ra, 0(sp)
+	sw s0, 4(sp)
+	sw s1, 8(sp)
+	sw s2, 12(sp)
+	sw s3, 16(sp)			# stores the number of rows in m0
+	sw s4, 20(sp)			# the number of columns in m0
+	sw s5, 24(sp)			# pointer to m0
+	sw s6, 28(sp)			# number of rows in m1
+	sw s7, 32(sp)			# number of columns in m1
+	sw s8, 36(sp)			# pointer to m1
+	sw s9, 40(sp)			# number of rows in the input matrix
+	sw s10, 44(sp)			# number of columns in the input matrix
+	sw s11, 48(sp)			# pointer to the input matrix
 
-    # save the arguments
-    addi sp, sp, -32
-    sw s0, 0(sp)
-    sw s1, 4(sp)
-    sw s2, 8(sp)
-    sw s3, 12(sp)
-    sw s4, 16(sp) # hidden layer pointer
-    sw s5, 20(sp) # number of elements in hidden layer
-    sw s6, 24(sp)
-    sw ra, 28(sp)
-
-    lw s0, 4(a1) # M0_PATH
-    lw s1, 8(a1) # M1_PATH
-    lw s2, 12(a1) # INPUT_PATH
-    lw s3, 16(a1) # OUTPUT_PATH
-    mv s6, a2
+	mv s0, a0
+	mv s1, a1
+	mv s2, a2
 
 	# =====================================
-    # LOAD MATRICES
-    # =====================================
+	# LOAD MATRICES
+	# =====================================
+	# Load pretrained m0
+	lw a0, 4(s1)
+	addi sp, sp, -8
+	mv a1, sp
+	addi a2, sp, 4
+	jal read_matrix
+	lw s3, 0(sp)
+	lw s4, 4(sp)
+	mv s5, a0
+	addi sp, sp, 8
+	# Load pretrained m1
+	lw a0, 8(s1)
+	addi sp, sp, -8
+	mv a1, sp
+	addi a2, sp, 4
+	jal read_matrix
+	lw s6, 0(sp)
+	lw s7, 4(sp)
+	mv s8, a0
+	addi sp, sp, 8
+	# Load input matrix
+	lw a0, 12(s1)
+	addi sp, sp, -8
+	mv a1, sp
+	addi a2, sp, 4
+	jal read_matrix
+	lw s9, 0(sp)
+	lw s10, 4(sp)
+	mv s11, a0
+	addi sp, sp, 8
+	
+	# =====================================
+	# RUN LAYERS
+	# =====================================
+	# 1. LINEAR LAYER:    m0 * input
+	mul a0, s3, s10
+	slli a0, a0, 2
+	jal malloc
+	beqz a0, error48
+	mv t0, a0
+	addi sp, sp, -4
+	sw t0, 0(sp)
+	mv a0, s5
+	mv a1, s3
+	mv a2, s4
+	mv a3, s11
+	mv a4, s9
+	mv a5, s10
+	mv a6, t0
+	jal matmul
+	# free input and m0
+	mv a0, s5
+	jal free
+	mv a0, s11
+	jal free
 
-    # Load pretrained m0
-    li a0, 8
-    jal malloc # FREE
-    beq a0, x0, malloc_exit
-    addi sp, sp, -8
-    sw a0, 0(sp)
-    add a1, x0, a0
-    addi a2, a0, 4
-    mv a0, s0
-    jal read_matrix
-    sw a0, 4(sp)
+	lw t0, 0(sp)
+	addi sp, sp, 4
+	# 2. NONLINEAR LAYER: ReLU(m0 * input)
+	addi sp, sp, -4
+	sw t0, 0(sp)
+	mv a0, t0
+	mul a1, s3, s10
+	jal relu
+	lw t0, 0(sp)
+	addi sp, sp, 4
+	# 3. LINEAR LAYER:    m1 * ReLU(m0 * input)
+	addi sp, sp, -8
+	sw t0, 0(sp)
 
-    # Load pretrained m1
-    li a0, 8
-    jal malloc # FREE
-    beq a0, x0, malloc_exit
-    addi sp, sp, -8
-    sw a0, 0(sp)
-    add a1, x0, a0
-    addi a2, a0, 4
-    mv a0, s1
-    jal read_matrix
-    sw a0, 4(sp)
+	mul a0, s6, s10
+	slli a0, a0, 2
+	jal malloc
+	beqz a0, error48
+	mv t1, a0
 
-    # Load input matrix
-    li a0, 8
-    jal malloc # FREE
-    beq a0, x0, malloc_exit
-    addi sp, sp, -8
-    sw a0, 0(sp)
-    add a1, x0, a0
-    addi a2, a0, 4
-    mv a0, s2
-    jal read_matrix
-    sw a0, 4(sp)
+	sw t1, 4(sp)
+	mv a0, s8
+	mv a1, s6
+	mv a2, s7
+	lw t0, 0(sp)
+	mv a3, t0
+	mv a4, s3
+	mv a5, s10
+	mv a6, t1
+	jal matmul
+	lw t0, 0(sp)
+	lw t1, 4(sp)
+	addi sp, sp, 8
 
-    # sp layout now
-    # 0-4: input matrix
-    # 4-8: input dimensions
-    # 8-12: m1 matrix
-    # 12-16: m1 dimensions
-    # 16-20: m0 matrix
-    # 20-24: m0 dimensions
+	# free t0
+	addi sp, sp, -4
+	sw t1, 0(sp)
+	mv a0, t0
+	jal free
+	# free m1
+	mv a0, s8
+	jal free
+	lw t1, 0(sp)
+	addi sp, sp, 4
 
-    # =====================================
-    # RUN LAYERS
-    # =====================================
-    # 1. LINEAR LAYER:    m0 * input
-    # 2. NONLINEAR LAYER: ReLU(m0 * input)
-    # 3. LINEAR LAYER:    m1 * ReLU(m0 * input)
+	# =====================================
+	# WRITE OUTPUT
+	# =====================================
+	# Write output matrix
+	addi sp, sp, -4
+	sw t1, 0(sp)
+	lw a0, 16(s1)
+	mv a1, t1
+	mv a2, s6
+	mv a3, s10
+	jal write_matrix
+	lw t1, 0(sp)
+	addi sp, sp, 4
 
-    # 1. Hidden layer, matmul(m0, input)
-
-    # allocate memory for the resulting matrix
-    lw t0, 20(sp)
-    lw t1, 0(t0)
-    lw a1, 0(t1) # m0 rows
-    lw t0, 4(sp)
-    lw t1, 0(t0)
-    lw a5, 4(t1) # input cols
-
-    mul a0, a1, a5
-    mv s5, a0 # number of elements
-    slli a0, a0, 2
-    jal malloc # FREE
-    beq a0, x0, malloc_exit
-
-    # prepare the call for matmul
-    mv s4, a0
-    mv a6, a0 # resulting matrix pointer
-    lw a0, 16(sp) # m0 matrix
-    lw t0, 20(sp)
-    lw t1, 0(t0)
-    lw a1, 0(t1) # m0 rows
-    lw a2, 4(t1) # m0 cols
-
-    lw a3, 0(sp) # input matrix
-    lw t0, 4(sp)
-    lw t1, 0(t0)
-    lw a4, 0(t1) # input rows
-    lw a5, 4(t1) # input cols
-    jal matmul
-
-    mv a0, s4
-    mv a1, s5
-    jal relu
-
-    # second matmul(m1, hidden_layer)
-    lw t0, 12(sp)
-    lw t1, 0(t0)
-    lw a1, 0(t1) # m1 rows
-    lw t0, 4(sp)
-    lw t1, 0(t0)
-    lw a5, 4(t1) # input cols
-
-    mul a0, a1, a5
-    slli a0, a0, 2
-    jal malloc
-    beq a0, x0, malloc_exit
-
-    mv s5, a0
-    mv a6, s5
-    lw a0, 8(sp)
-    lw t0, 12(sp)
-    lw t1, 0(t0)
-    lw a1, 0(t1) # m1 rows
-    lw a2, 4(t1) # m1 cols
-
-    mv a3, s4
-    lw t0, 20(sp)
-    lw t1, 0(t0)
-    lw a4, 0(t1) # m0 rows
-    lw t0, 4(sp)
-    lw t1, 0(t0)
-    lw a5, 4(t1) # input cols
-
-    jal matmul
-
-    # =====================================
-    # WRITE OUTPUT
-    # =====================================
-    # Write output matrix
-
-    mv a0, s3
-    mv a1, s5
-    lw t0, 12(sp)
-    lw t1, 0(t0)
-    lw a2, 0(t1) # m1 rows
-    lw t0, 4(sp)
-    lw t1, 0(t0)
-    lw a3, 4(t1) # input cols
-    jal write_matrix
-
-    # =====================================
-    # CALCULATE CLASSIFICATION/LABEL
-    # =====================================
-    # Call argmax
-    mv a0, s5
-    lw t0, 12(sp)
-    lw t1, 0(t0)
-    lw a1, 0(t1) # m1 rows
-    lw t0, 4(sp)
-    lw t1, 0(t0)
-    lw a5, 4(t1) # input cols
-    mul a1, a1, a5
-    jal argmax
-
-    # Print classification
-    beq s6, x0, print
-    j end
-print:
-    mv a1, a0
-    jal print_int
-    # Print newline afterwards for clarity
-    li a1, '\n'
-    jal print_char
-
+	# =====================================
+	# CALCULATE CLASSIFICATION/LABEL
+	# =====================================
+	# Call argmax
+	addi sp, sp, -4
+	sw t1, 0(sp)
+	mv a0, t1
+	mul a1, s6, s10
+	jal argmax
+	mv t2, a0
+	lw t1, 0(sp)
+	addi sp, sp, 4
+	# Print classification
+	bnez s2, end
+	addi sp, sp, -4
+	sw t1, 0(sp)
+	mv a1, t2
+	jal print_int
+	# Print newline afterwards for clarity
+	li a1, '\n'
+	jal print_char
+	lw t1, 0(sp)
+	addi sp, sp, 4
 end:
-
-    # free all allocated memory
-
-    mv a0, s5
-    jal free
-
-    mv a0, s4
-    jal free
-
-    # free input matrix
-    lw a0, 0(sp)
-    jal free
-
-    # free input dims inner blocks
-    lw t0, 4(sp)        # dims pointer
-    lw t1, 0(t0)        # rows pointer
-    mv a0, t1
-    jal free
-    lw t1, 4(t0)        # cols pointer
-    mv a0, t1
-    jal free
-
-    # free input dims block itself
-    mv a0, t0
-    jal free
+	# free t1
+	mv a0, t1
+	jal free
+	lw ra, 0(sp)
+	lw s0, 4(sp)
+	lw s1, 8(sp)
+	lw s2, 12(sp)
+	lw s3, 16(sp)
+	lw s4, 20(sp)
+	lw s5, 24(sp)
+	lw s6, 28(sp)
+	lw s7, 32(sp)
+	lw s8, 36(sp)
+	lw s9, 40(sp)
+	lw s10, 44(sp)
+	lw s11, 48(sp)
+	addi sp, sp, 52
+	ret
 
 
-    # -------- Free m1 matrix + dims --------
-    # free m1 matrix
-    lw a0, 8(sp)
-    jal free
+error35:
+	li a1, 35
+	j exit2
+error48:
+	li a1, 48
+	j exit2
 
-    # free m1 dims inner blocks
-    lw t0, 12(sp)
-    lw t1, 0(t0)
-    mv a0, t1
-    jal free
-    lw t1, 4(t0)
-    mv a0, t1
-    jal free
-
-    # free dims block
-    mv a0, t0
-    jal free
-
-
-    # -------- Free m0 matrix + dims --------
-    # free m0 matrix
-    lw a0, 16(sp)
-    jal free
-
-    # free m0 dims inner blocks
-    lw t0, 20(sp)
-    lw t1, 0(t0)
-    mv a0, t1
-    jal free
-    lw t1, 4(t0)
-    mv a0, t1
-    jal free
-
-    # free dims block
-    mv a0, t0
-    jal free
-
-    # restore the stack
-    addi sp, sp, 24
-
-    # prolougue
-    lw s0, 0(sp)
-    lw s1, 4(sp)
-    lw s2, 8(sp)
-    lw s3, 12(sp)
-    lw s4, 16(sp)
-    lw s5, 20(sp)
-    lw s6, 24(sp)
-    lw ra, 28(sp)
-    addi sp, sp, 32
-
-    ret
-
-cmd_exit:
-    # exit with error code 89
-    li a1, 89
-    jal exit2
-
-malloc_exit:
-    # exit with error code 88
-    li a1, 88
-    jal exit2
