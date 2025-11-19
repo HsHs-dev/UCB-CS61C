@@ -92,6 +92,15 @@ read_matrix:
     mul t2, t2, t1
     mul t2, t2, t0 # t2 = sizeof(int) * rows * cols
 
+    addi sp, sp, -4
+    sw t2, 0(sp)
+
+    # free the buffer
+    jal free
+
+    lw t2, 0(sp)
+    addi sp, sp, 4
+
     # save the t2 register
     addi sp, sp, -4
     sw t2, 0(sp)
