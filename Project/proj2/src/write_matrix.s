@@ -48,9 +48,25 @@ write_matrix:
     # save the file descriptor to s0
     mv s0, a0
 
+    # write the headers to the file
+    addi sp, sp, -8 # use the stack as a buffer to the two headers
+    sw s2, 0(sp)
+    sw s3, 4(sp)
+
+    mv a1, s0
+    mv a2, sp
+    li a3, 2
+    li a4, 4
+    jal fwrite
+
+    # Check if fwrite call failed
+    li t0, 2
+    bne a0, t0, fwrite_exit
+    
+    addi sp, sp, 8
+
     # compute the number of elements to be written
     mul t0, s2, s3 
-    addi t0, t0, 2 # t0 = number of elements to be written (+2 for the rows cols)
     li t1, 4 # sizeof(int)
 
     mv a1, s0
@@ -61,7 +77,6 @@ write_matrix:
 
     # check if fwrite call failed
     mul t0, s2, s3
-    addi t0, t0, 2
     bne a0, t0, fwrite_exit
 
     mv a1, s0

@@ -68,7 +68,7 @@ classify:
 		mv s5, a0
 
     # Load input matrix
-		lw a0, 16(s0)
+		lw a0, 12(s0)
 		addi sp, sp, -8
 		mv a1, sp
 		addi a2, sp, 4
@@ -86,8 +86,8 @@ classify:
     # 3. LINEAR LAYER:    m1 * ReLU(m0 * input)
 
 		# allocate memory for the hidden_layer matrix = matmul(m0, input)
-		lw t0, 0(s3) # m0 rows
-		lw t1, 0(s10) # input cols
+		mv t0, s3 # m0 rows
+		mv t1, s10 # input cols
 		mul a0, t0, t1
 		slli a0, a0, 2
 		jal malloc
@@ -112,8 +112,8 @@ classify:
 		# call ReLU on hidden_layer
 		addi sp, sp, -4
 		sw a0, 0(sp)
-		lw t0, 0(s3) # m0 rows
-		lw t1, 0(s10) # input cols
+		mv t0, s3 # m0 rows
+		mv t1, s10 # input cols
 		mul a1, t0, t1
 		jal relu
 
@@ -126,8 +126,8 @@ classify:
 		sw t0, 0(sp)
 
 		# allocate memory for the scores matrix
-		lw t0, 0(s6) # m1 rows
-		lw t1, 0(s10) # input cols
+		mv t0, s6 # m1 rows
+		mv t1, s10 # input cols
 		mul a0, t0, t1
 		slli a0, a0, 2
 		jal malloc
@@ -145,8 +145,8 @@ classify:
 		mv a1, s6
 		mv a2, s7
 		mv a3, t0
-		lw a4, 0(s3) # m0 rows
-		lw a5, 0(s10) # input cols
+		mv a4, s3 # m0 rows
+		mv a5, s10 # input cols
 		jal matmul
 
 		lw a0, 0(sp)
@@ -170,10 +170,10 @@ classify:
 		addi sp, sp, -4
 		sw t0, 0(sp)
 
-		lw a0, 20(s0)
+		lw a0, 16(s0)
 		mv a1, t0
-		lw a2, 0(s6)
-		lw a3, 0(s10)
+		mv a2, s6
+		mv a3, s10
 		jal write_matrix
 
 		lw t0, 0(sp)
@@ -186,8 +186,8 @@ classify:
 		addi sp, sp, -4
 		sw t0, 0(sp)
 		mv a0, t0
-		lw t0, 0(s6)
-		lw t1, 0(s10)
+		mv t0, s6
+		mv t1, s10
 		mul a1, t0, t1
 		jal argmax
 
@@ -221,12 +221,6 @@ end:
 	  mv a0, s2
     jal free
 
-    mv a0, s3
-    jal free
-
-    mv a0, s4
-    jal free
-
     mv a0, s5
     jal free
 
@@ -237,12 +231,6 @@ end:
     jal free
 
     mv a0, s8
-    jal free
-
-    mv a0, s9
-    jal free
-
-    mv a0, s10
     jal free
 
     lw s0, 0(sp)
