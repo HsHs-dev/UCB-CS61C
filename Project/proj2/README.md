@@ -1,5 +1,7 @@
 # fa20-proj2-starter
 
+**Project Specification: https://www.learncs.site/docs/curriculum-resource/cs61c/projects/proj2**
+
 ```
 .
 ├── inputs (test inputs)
