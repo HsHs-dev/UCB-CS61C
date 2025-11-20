@@ -8,6 +8,8 @@ This is the last course in Berkeley's CS61 series, which dives into the internal
 
 More on the course, resources and recordings can be found in [csdiy.wiki](https://csdiy.wiki/en/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/CS61C/)
 
+The Fall 2020 website with all the links to videos, discussions, labs and projects can be found [here](https://www.learncs.site/docs/curriculum-resource/cs61c/syllabus)
+
 ## Why learning Computer Architecture?
 
 I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main drive for learning:
