@@ -27,5 +27,5 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 ### Projects
 
 - [x] Project 1 – Conway's Game of Life, in RGB!
-- [x] Project 2 - Artificial Neural Network (ANN) in RISC-V assembly
+- [x] Project 2 - [Artificial Neural Network (ANN) in RISC-V assembly](https://github.com/HsHs-dev/RISCV-ANN)
 - [ ] Project 3 - Building a two-stage pipeline CPU with *Logisim*
