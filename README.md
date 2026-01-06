@@ -22,7 +22,8 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 2 – Advanced C
 - [x] Lab 3 – RISCV Assembly
 - [x] Lab 4 - RISCV Functions, Pointers
-- [ ] Lab 5 - Logisim
+- [x] Lab 5 - Logisim
+- [ ] Lab 6 - Pipelining and CPU
 
 ### Projects
 
