@@ -6,4 +6,5 @@ Look ma, I made a CPU! Here's what I did:
 - Constructed the Register File which governs writing to and reading from each one of the RISC-V 32 registers
 - The `addi` instruction:
     * constructed the I-type immediate generator subcircuit
-    * 
+    * constructed the S-type immediate generator subcircuit
+    * constructed the B-type immediate generator subcircuit
