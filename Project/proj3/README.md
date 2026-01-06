@@ -9,3 +9,4 @@ Look ma, I made a CPU! Here's what I did:
     * constructed the S-type immediate generator subcircuit
     * constructed the B-type immediate generator subcircuit
     * constructed the J-type immediate generator subcircuit
+    * constructed the U-type immediate generator subcircuit
