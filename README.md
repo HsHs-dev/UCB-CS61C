@@ -23,7 +23,8 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 3 – RISCV Assembly
 - [x] Lab 4 - RISCV Functions, Pointers
 - [x] Lab 5 - Logisim
-- [ ] Lab 6 - Pipelining and CPU
+- [x] Lab 6 - Pipelining and CPU
+- [ ] Lab 7 - Caches
 
 ### Projects
 
