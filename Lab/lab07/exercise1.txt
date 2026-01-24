@@ -4,21 +4,35 @@ Scenario 1
     3. [Block Size], [32]
 
 Scenario 2
-    1.
-    2. 
-    3.
+    1. 2
+    2. MHHH
+    3. 1.0
 
 Scenario 3
-    1.
-    2.
-    3.
-    4.
-    5.
+    1. [L1 0.5], [L2 0.0], [Overall 0.5]
+    2. [32 of L1 accesses], [16 of L1 misses]
+    3. [16 of L2 accesses]
+    4. [option 1] [rep count > 1]
+    5. =, =, +, =
 
 --- lines below are ignored by the AG ---
 
 Checkoff Question 1: No matter what times we repeat the access, the hit rate will remain 0 because we always update the block with never-seen-before data to the same block (mod 4) because block size is less than step size
 Checkoff Question 2: The two parameters are Block size and Step size
-Checkoff Question 3:
-Checkoff Question 4:
-Checkoff Question 5:
+Checkoff Question 3: first access (lw) is a compulsory miss (M), then 16 bytes are loaded from memory and the store (sw) is a hit because we have the block (H), then next iteration with step size of 8 bytes is in the same fetched block from memory (first 0 to 8, then 8 to 16) so we already have it so lw is a hit (H), also the store is a hit (H)
+Checkoff Question 4: After the first inner loop finishes the entire array will be loaded to the cache (array size == cache size), so subsequent iterations will just access the array from the cache
+Checkoff Question 5: given that each function should be applied to the same array element, we will load maximum number of array elements to our cache, then apply the functions to each element, then load the next patch and so on
+so instead of
+for (rep = 0; rep < RepCount; rep++) {
+    for (i = 0; i < arraySize; i++) {
+        apply_function(rep, arr[i]);
+    }
+}
+we will do
+for (i = 0; i < arraySize; i++) {
+    for (rep = 0; rep < RepCount; rep++) {
+        apply_function(rep, arr[i]);
+    }
+}
+
+Checkoff Question 6: because when doing loads L2 cache will serve us, and when rep count is > 1, data will be reused
