@@ -1,11 +1,11 @@
 Scenario 1
-    1.
-    2.
-    3.
+    1. Because [step size] in bytes is exactly equal to [cache size] in bytes.
+    2. 0.0
+    3. [Block Size], [32]
 
 Scenario 2
     1.
-    2.
+    2. 
     3.
 
 Scenario 3
@@ -17,8 +17,8 @@ Scenario 3
 
 --- lines below are ignored by the AG ---
 
-Checkoff Question 1:
-Checkoff Question 2:
+Checkoff Question 1: No matter what times we repeat the access, the hit rate will remain 0 because we always update the block with never-seen-before data to the same block (mod 4) because block size is less than step size
+Checkoff Question 2: The two parameters are Block size and Step size
 Checkoff Question 3:
 Checkoff Question 4:
 Checkoff Question 5:
