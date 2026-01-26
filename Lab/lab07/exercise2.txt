@@ -1,8 +1,8 @@
-1.
-2.
+1. [jki] [kji]
+2. [kij] [ikj]
 
 --- lines below are ignored by the AG ---
 
-Checkoff Question 1:
-Checkoff Question 2:
-Checkoff Question 3:
+Checkoff Question 1: Because those two functions goes through memory in order which is cache friendly, unlike the others which jumps through memory 
+Checkoff Question 2: Because `j` being the inner most loop makes the loading varies in each iteration, making us access far away indexes, completely not making use of the cache
+Checkoff Question 3: We can say that the smaller the stride the better the performance, because accessing memory contiguously will load full cache lines
