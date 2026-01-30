@@ -1,19 +1,21 @@
 Exercise 1:
-    1.
-    2.
-    3.
+    1. 32
+    2. 3, 7, 0, 7
+    3. no, yes
 
 Exercise 2:
-    1.
+    1. 0x03, 0x25, 0x4A, 0x63, 0x9C, 0xB1, 0xD7, 0xFE, 0x03, 0x25
 
 Exercise 3:
-    1.
+    1. increase the physical memory size, so less pages will be evicted and can cause less page faults
 
 --- lines below are ignored by the AG ---
 
 Exercise 1 Checkoff Questions:
-    1.
-    2.
+    1. We take the virtual address and split it to offset and page number, we look for the virtual page number in the Translation lookaside buffer or TLB, it's not present because it's the first access, so this is a tlb miss, check the page table entry for this virtual page, the valid bit is 0 so the page is invalid and it must be brought from hard disk.
+
+    2. it's normal for the physical address to have same or less bytes than the virtual one, because virtual address allows for the concept of infinite memory.
+
 
 Exercise 4 Checkoff Question:
-    1.
+    1. COULD NOT BE COMPLETED DUE TO THE APPLET ANIMATION MALFUNTION
