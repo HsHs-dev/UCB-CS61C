@@ -24,7 +24,11 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 4 - RISCV Functions, Pointers
 - [x] Lab 5 - Logisim
 - [x] Lab 6 - Pipelining and CPU
-- [ ] Lab 7 - Caches
+- [x] Lab 7 - Caches
+- [x] Lab 8 - OS (context switch), I/O, DMA, Disks, Networking & Virtual Memory
+- [x] Lab 9 - SIMD Instructions
+- [ ] Lab 10 - Thread Level Parallelism
+- [ ] Lab 11 - Spark/Dependability
 
 ### Projects
 
