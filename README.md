@@ -27,7 +27,7 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 7 - Caches
 - [x] Lab 8 - OS (context switch), I/O, DMA, Disks, Networking & Virtual Memory
 - [x] Lab 9 - SIMD Instructions
-- [ ] Lab 10 - Thread Level Parallelism
+- [x] Lab 10 - Thread Level Parallelism
 - [ ] Lab 11 - Spark/Dependability
 
 ### Projects
