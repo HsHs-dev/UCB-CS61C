@@ -21,8 +21,9 @@ gcc -fopenmp server_basic.o libhttp.o omp_apps.o server_utils_serial.o libbmp.o 
 collect2: error: ld returned 1 exit status
 make: *** [Makefile:18: server_basic] Error 1
 ```
+
 * go to the server_utils.h file
-* add the `extern` keyword before *server_fd*, *server_port*, and *server_files_directory*. The `extern` keyword extern informs the compiler that i is defined elsewhere in the program (most likely in a different source file), so there’s no need to allocate space for it, which caused the linker problem earlier.
+* add the `extern` keyword before *server_fd*, *server_port*, and *server_files_directory*. The `extern` keyword informs the compiler that the variables are defined elsewhere in the program (most likely in a different source file), so there’s no need to allocate space for them, which caused the linker problem earlier.
 * choose either `server.c` or `server_utils.c` and declare the variables:
 
 ```c
