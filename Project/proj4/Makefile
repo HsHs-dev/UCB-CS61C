@@ -2,7 +2,8 @@ CC = gcc
 CFLAGS = -g -Wall -std=c99 -fopenmp -mavx -mfma -pthread
 LDFLAGS = -fopenmp
 CUNIT = -L/home/ff/cs61c/cunit/install/lib -I/home/ff/cs61c/cunit/install/include -lcunit
-PYTHON = -I/usr/include/python3.6 -lpython3.6m
+PYTHON_INC = $(shell python3-config --includes)
+PYTHON_LDFLAGS = $(shell python3-config --embed --ldflags)
 
 install:
 	if [ ! -f files.txt ]; then touch files.txt; fi
@@ -23,7 +24,8 @@ clean:
 
 test:
 	rm -f test
-	$(CC) $(CFLAGS) mat_test.c matrix.c -o test $(LDFLAGS) $(CUNIT) $(PYTHON)
+	$(CC) $(CFLAGS) mat_test.c matrix.c -o test \
+	$(LDFLAGS) $(CUNIT) $(PYTHON_INC) $(PYTHON_LDFLAGS)
 	./test
 
 .PHONY: test
