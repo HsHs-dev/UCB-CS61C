@@ -110,7 +110,40 @@ int allocate_matrix(matrix **mat, int rows, int cols) {
  */
 int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset,
                         int col_offset, int rows, int cols) {
-  /* TODO: YOUR CODE HERE */
+
+  if (rows < 1 || cols < 1) {
+    return -1;
+  }
+
+  // a new matrix mat that is a slice of the matrix from
+  *mat = malloc(sizeof(matrix));
+  if (*mat == NULL) {
+    return -1;
+  }
+
+  (*mat)->rows = rows;
+  (*mat)->cols = cols;
+  (*mat)->parent = from;
+  (*mat)->ref_cnt = 1;
+  from->ref_cnt++;
+
+  if (rows == 1 || cols == 1) {
+    (*mat)->is_1d = 1;
+  } else {
+    (*mat)->is_1d = 0;
+  }
+
+  (*mat)->data = malloc(rows * sizeof(double *));
+  if ((*mat)->data == NULL) {
+    free(*mat);
+    return -1;
+  }
+
+  for (int i = 0; i < rows; i++) {
+    (*mat)->data[i] = from->data[i + row_offset] + col_offset;
+  }
+
+  return 0;
 }
 
 /*
@@ -119,26 +152,59 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset,
  * `mat->data` if no other existing matrices are also referring this data array.
  * See the spec for more information.
  */
-void deallocate_matrix(matrix *mat) { /* TODO: YOUR CODE HERE */ }
+void deallocate_matrix(matrix *mat) {
+
+  if (mat == NULL)
+    return;
+
+  mat->ref_cnt--;
+
+  if (mat->ref_cnt == 0) {
+    if (mat->parent == NULL) {
+      // mat is the root parent and all children are gone, we can free the data
+      for (int i = 0; i < mat->rows; i++) {
+        free(mat->data[i]);
+      }
+    } else {
+      // mat is a child, tell the parent that one of the children is gone
+      // this recursive step is crucial when the freeing order is not preserved
+      // (what if the user frees the parent before the child)
+      // the parent can't be freed, so we have to call free the parent after
+      // each child's freeing, to make sure that the parent gets freed properly
+      deallocate_matrix(mat->parent);
+    }
+
+    free(mat->data);
+    free(mat);
+  }
+}
 
 /*
  * Return the double value of the matrix at the given row and column.
  * You may assume `row` and `col` are valid.
  */
-double get(matrix *mat, int row, int col) { /* TODO: YOUR CODE HERE */ }
+double get(matrix *mat, int row, int col) { return mat->data[row][col]; }
 
 /*
  * Set the value at the given row and column to val. You may assume `row` and
  * `col` are valid
  */
 void set(matrix *mat, int row, int col, double val) {
-  /* TODO: YOUR CODE HERE */
+  mat->data[row][col] = val;
 }
 
 /*
  * Set all entries in mat to val
  */
-void fill_matrix(matrix *mat, double val) { /* TODO: YOUR CODE HERE */ }
+void fill_matrix(matrix *mat, double val) {
+  int rows = mat->rows;
+  int cols = mat->cols;
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      mat->data[i][j] = val;
+    }
+  }
+}
 
 /*
  * Store the result of adding mat1 and mat2 to `result`.
