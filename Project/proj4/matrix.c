@@ -211,7 +211,18 @@ void fill_matrix(matrix *mat, double val) {
  * Return 0 upon success and a nonzero value upon failure.
  */
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-  /* TODO: YOUR CODE HERE */
+
+  if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
+    return -1;
+  }
+
+  for (int i = 0; i < result->rows; i++) {
+    for (int j = 0; j < result->cols; j++) {
+      result->data[i][j] = mat1->data[i][j] + mat2->data[i][j];
+    }
+  }
+
+  return 0;
 }
 
 /*
@@ -219,7 +230,18 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  * Return 0 upon success and a nonzero value upon failure.
  */
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-  /* TODO: YOUR CODE HERE */
+
+  if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
+    return -1;
+  }
+
+  for (int i = 0; i < result->rows; i++) {
+    for (int j = 0; j < result->cols; j++) {
+      result->data[i][j] = mat1->data[i][j] - mat2->data[i][j];
+    }
+  }
+
+  return 0;
 }
 
 /*
@@ -229,7 +251,26 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  * elements.
  */
 int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-  /* TODO: YOUR CODE HERE */
+
+  if (mat1->cols != mat2->rows) {
+    return -1;
+  }
+
+  if (result->rows != mat1->rows || result->cols != mat2->cols) {
+    return -1;
+  }
+
+  for (int i = 0; i < result->rows; i++) {
+    for (int j = 0; j < result->cols; j++) {
+      double sum = 0;
+      for (int k = 0; k < mat1->cols; k++) {
+        sum += mat1->data[i][k] * mat2->data[k][j];
+      }
+      result->data[i][j] = sum;
+    }
+  }
+
+  return 0;
 }
 
 /*
@@ -239,17 +280,91 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  * multiplication.
  */
 int pow_matrix(matrix *result, matrix *mat, int pow) {
-  /* TODO: YOUR CODE HERE */
+
+  if (mat->rows != mat->cols)
+    return -1;
+
+  matrix *base = NULL;
+  matrix *tmp = NULL;
+  allocate_matrix(&base, result->rows, result->cols);
+  allocate_matrix(&tmp, result->rows, result->cols);
+  copy_matrix(mat, tmp);
+  copy_matrix(mat, base);
+  make_identity_matrix(result);
+
+  // the algorithm is logarithmic exponentiation
+  while (pow > 0) {
+    // if pow is odd
+    if (pow & 1) {
+      mul_matrix(tmp, result, base);
+      copy_matrix(tmp, result);
+    }
+
+    mul_matrix(tmp, base, base);
+    copy_matrix(tmp, base);
+
+    // divide pow by 2
+    pow >>= 1;
+  }
+
+  deallocate_matrix(base);
+  deallocate_matrix(tmp);
+
+  return 0;
+}
+
+/*
+ * Helper function: copy all elements from src to dest
+ * it assume that src and dest has the same dimensions
+ */
+void copy_matrix(matrix *src, matrix *dest) {
+  for (int i = 0; i < src->rows; i++) {
+    for (int j = 0; j < src->cols; j++) {
+      dest->data[i][j] = src->data[i][j];
+    }
+  }
+}
+
+/*
+ * Helper function: make mat an identity matrix
+ */
+void make_identity_matrix(matrix *mat) {
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      if (i == j) {
+        mat->data[i][j] = 1;
+      } else {
+        mat->data[i][j] = 0;
+      }
+    }
+  }
 }
 
 /*
  * Store the result of element-wise negating mat's entries to `result`.
  * Return 0 upon success and a nonzero value upon failure.
  */
-int neg_matrix(matrix *result, matrix *mat) { /* TODO: YOUR CODE HERE */ }
+int neg_matrix(matrix *result, matrix *mat) {
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      result->data[i][j] = -(mat->data[i][j]);
+    }
+  }
+
+  return 0;
+}
 
 /*
  * Store the result of taking the absolute value element-wise to `result`.
  * Return 0 upon success and a nonzero value upon failure.
  */
-int abs_matrix(matrix *result, matrix *mat) { /* TODO: YOUR CODE HERE */ }
+int abs_matrix(matrix *result, matrix *mat) {
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      double element = (mat->data[i][j]);
+      result->data[i][j] = element < 0 ? -element : element;
+    }
+  }
+
+  return 0;
+}

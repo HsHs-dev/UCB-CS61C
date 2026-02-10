@@ -1,15 +1,14 @@
 #include <Python.h>
 
 typedef struct matrix {
-    int rows;      	// number of rows
-    int cols;      	// number of columns
-    double **data; 	// each element is a pointer to a row of data
-    int is_1d;     	// Whether this matrix is a 1d matrix
-    // For 1D matrix, shape is (rows * cols)
-    int ref_cnt;
-    struct matrix *parent;
+  int rows;      // number of rows
+  int cols;      // number of columns
+  double **data; // each element is a pointer to a row of data
+  int is_1d;     // Whether this matrix is a 1d matrix
+  // For 1D matrix, shape is (rows * cols)
+  int ref_cnt;
+  struct matrix *parent;
 } matrix;
-
 
 void rand_matrix(matrix *result, unsigned int seed, double low, double high);
 int allocate_matrix(matrix **mat, int rows, int cols);
@@ -25,3 +24,5 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2);
 int pow_matrix(matrix *result, matrix *mat, int pow);
 int neg_matrix(matrix *result, matrix *mat);
 int abs_matrix(matrix *result, matrix *mat);
+void copy_matrix(matrix *src, matrix *dest);
+void make_identity_matrix(matrix *mat);
