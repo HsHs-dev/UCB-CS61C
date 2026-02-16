@@ -1,0 +1,5 @@
+/home/hshs-dev/CS61C/Project/proj4/.venv/lib/python3.12/site-packages/dumbpy.cpython-312-x86_64-linux-gnu.so
+/home/hshs-dev/CS61C/Project/proj4/.venv/lib/python3.12/site-packages/dumbpy-0.0.1-py3.12.egg-info/PKG-INFO
+/home/hshs-dev/CS61C/Project/proj4/.venv/lib/python3.12/site-packages/dumbpy-0.0.1-py3.12.egg-info/SOURCES.txt
+/home/hshs-dev/CS61C/Project/proj4/.venv/lib/python3.12/site-packages/dumbpy-0.0.1-py3.12.egg-info/top_level.txt
+/home/hshs-dev/CS61C/Project/proj4/.venv/lib/python3.12/site-packages/dumbpy-0.0.1-py3.12.egg-info/dependency_links.txt
