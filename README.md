@@ -28,11 +28,11 @@ I will just put this quote by [Julia Evans](https://jvns.ca/about/) as the main 
 - [x] Lab 8 - OS (context switch), I/O, DMA, Disks, Networking & Virtual Memory
 - [x] Lab 9 - SIMD Instructions
 - [x] Lab 10 - Thread Level Parallelism
-- [ ] Lab 11 - Spark/Dependability
+- [ ] ~Lab 11 - Spark/Dependability~
 
 ### Projects
 
 - [x] Project 1 – Conway's Game of Life, in RGB!
 - [x] Project 2 - [Artificial Neural Network (ANN) in RISC-V assembly](https://github.com/HsHs-dev/RISCV-ANN)
-- [ ] Project 3 - CS61CPU - Building a two-stage pipeline CPU with *Logisim*
-- [ ] ~~Project 4 - Numc~~
+- [x] Project 3 - CS61CPU - Building a two-stage pipeline CPU with *Logisim* (Part A and a part of Part B)
+- [ ] ~~Project 4 - Numc~~ (discarded for not complete project files)
