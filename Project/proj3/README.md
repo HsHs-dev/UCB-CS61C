@@ -10,3 +10,7 @@ Look ma, I made a CPU! Here's what I did:
     * constructed the B-type immediate generator subcircuit
     * constructed the J-type immediate generator subcircuit
     * constructed the U-type immediate generator subcircuit
+    * Added 2-stage pipeline to the `addi` instruction
+
+- Part B:
+    * edited the immediate generator to produce deffirent immediates depending on the immSel
