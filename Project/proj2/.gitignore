@@ -255,3 +255,6 @@ server_basic server_process
 
 # IntelliJ / PyCharm
 /.idea/
+
+# tests directory
+unittests/
